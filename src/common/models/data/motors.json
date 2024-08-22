@@ -188,5 +188,15 @@
     "weight": { "magnitude": 0.342, "unit": "lbs" },
     "diameter": { "magnitude": 2.0, "unit": "in" },
     "url": "https://www.vexrobotics.com/276-4840.html"
+  },
+  {
+    "name": "KoalaBEAR Actuator",
+    "freeSpeed": { "magnitude": 1200, "unit": "rpm" },
+    "stallTorque": { "magnitude": 5.0, "unit": "N*m" },
+    "stallCurrent": { "magnitude": 10, "unit": "A" },
+    "freeCurrent": { "magnitude": 2.0, "unit": "A" },
+    "weight": { "magnitude": 0.5511556555, "unit": "lbs" },
+    "diameter": { "magnitude": 2.5, "unit": "in" },
+    "url": "https://www.westwoodrobotics.io/wp-content/uploads/2023/10/BEAR_SDK_Manual_EN_0.3.2.pdf"
   }
 ]
