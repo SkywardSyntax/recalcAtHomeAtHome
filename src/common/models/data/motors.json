@@ -192,8 +192,8 @@
   {
     "name": "KoalaBEAR Actuator",
     "freeSpeed": { "magnitude": 1200, "unit": "rpm" },
-    "stallTorque": { "magnitude": 5.0, "unit": "N*m" },
-    "stallCurrent": { "magnitude": 10, "unit": "A" },
+    "stallTorque": { "magnitude": 10.5, "unit": "N*m" },
+    "stallCurrent": { "magnitude": 30, "unit": "A" },
     "freeCurrent": { "magnitude": 2.0, "unit": "A" },
     "weight": { "magnitude": 0.5511556555, "unit": "lbs" },
     "diameter": { "magnitude": 2.5, "unit": "in" },
