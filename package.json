@@ -53,6 +53,7 @@
     "build": "tsc && vite build",
     "serve": "vite preview",
     "test": ". ./.env && vitest",
+    "start-dev": "yarn add site && yarn build && yarn serve",
     "--------------------------------": "------------------------",
     "dev:analyze": "source-map-explorer 'build/static/js/*.js' --html coverage/src_map_explorer.html",
     "dev:coverage": "yarn test --coverage",
