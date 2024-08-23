@@ -24,6 +24,8 @@ export default function IntakeCalculator(): JSX.Element {
     netRatio === 0.0 ? 0.0 : 1.0 / netRatio,
   );
 
+  const [optimizedRatio, setOptimizedRatio] = useState<number | null>(null);
+
   useEffect(() => {
     setNetRatio(get.ratioPairs.calculateNetRatio().asNumber());
   }, [get.ratioPairs]);
@@ -31,6 +33,12 @@ export default function IntakeCalculator(): JSX.Element {
   useEffect(() => {
     setInvNetRatio(netRatio === 0.0 ? 0.0 : 1.0 / netRatio);
   }, [netRatio]);
+
+  useEffect(() => {
+    if (optimizedRatio !== null) {
+      alert(`Optimal Ratio: ${optimizedRatio}`);
+    }
+  }, [optimizedRatio]);
 
   return (
     <>

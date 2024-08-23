@@ -9,12 +9,12 @@ import {
   RatioInput,
 } from "common/components/io/new/inputs";
 import MeasurementOutput from "common/components/io/outputs/MeasurementOutput";
-import { Column, Columns, Message } from "common/components/styling/Building";
+import { Column, Columns, Message, Button } from "common/components/styling/Building";
 import { useAsyncMemo } from "common/hooks/useAsyncMemo";
 import Measurement from "common/models/Measurement";
 import { useGettersSetters } from "common/tooling/conversion";
 import { wrap } from "common/tooling/promise-worker";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { ArmParamsV1, ArmStateV1, armGraphConfig } from "web/calculators/arm";
 import {
   ArmWorkerFunctions,
@@ -35,6 +35,8 @@ export default function ArmCalculator(): JSX.Element {
   const [get, set] = useGettersSetters(ArmState.getState() as ArmStateV1);
 
   const [isCalculating, setIsCalculating] = useState(true);
+  const [optimalReduction, setOptimalReduction] = useState<number | null>(null);
+  const [optimizedValue, setOptimizedValue] = useState<number | null>(null);
 
   const states = useAsyncMemo(
     [] as MomentaryArmState[],
@@ -74,6 +76,20 @@ export default function ArmCalculator(): JSX.Element {
         : new Measurement(0, "s"),
     [states],
   );
+
+  useEffect(() => {
+    set.setRatio(get.ratio);
+  }, [timeToGoal]);
+
+  useEffect(() => {
+    setOptimizedValue(optimalReduction);
+  }, [optimalReduction]);
+
+  useEffect(() => {
+    if (optimalReduction !== null) {
+      alert(`Optimal Reduction: ${optimalReduction}`);
+    }
+  }, [optimalReduction]);
 
   const kG = useMemo(
     () =>
@@ -123,6 +139,39 @@ export default function ArmCalculator(): JSX.Element {
     ],
   );
 
+  const handleOptimize = async () => {
+    setIsCalculating(true);
+    let bestReduction = 0;
+    let bestTimeToGoal = new Measurement(Infinity, "s");
+
+    for (let reduction = 1; reduction <= 100; reduction++) {
+      const states = await worker.calculateArmStates(
+        get.motor.toDict(),
+        { ...get.ratio.toDict(), magnitude: reduction },
+        get.comLength.toDict(),
+        get.armMass.toDict(),
+        get.currentLimit.toDict(),
+        get.startAngle.toDict(),
+        get.endAngle.toDict(),
+        get.efficiency,
+        get.iterationLimit,
+      );
+
+      const timeToGoal = states.length > 0
+        ? Measurement.fromDict(states[states.length - 1].time)
+        : new Measurement(Infinity, "s");
+
+      if (timeToGoal.lt(bestTimeToGoal)) {
+        bestTimeToGoal = timeToGoal;
+        bestReduction = reduction;
+      }
+    }
+
+    setOptimalReduction(bestReduction);
+    set.setRatio(new Ratio(bestReduction, RatioType.REDUCTION));
+    setIsCalculating(false);
+  };
+
   return (
     <>
       <SimpleHeading
@@ -145,7 +194,7 @@ export default function ArmCalculator(): JSX.Element {
             id="ratio"
             tooltip="Ratio of the gearbox."
           >
-            <RatioInput stateHook={[get.ratio, set.setRatio]} />
+            <RatioInput stateHook={[get.ratio, set.setRatio]} optimizedValue={optimizedValue} />
           </SingleInputLine>
           <SingleInputLine
             label="Efficiency (%)"
@@ -260,6 +309,14 @@ export default function ArmCalculator(): JSX.Element {
             below.
           </Message>
           <KgKvKaDisplay kG={kG} kV={kV} kA={kA} distanceType={"angular"} />
+          <Button onClick={handleOptimize} disabled={isCalculating}>
+            Optimize
+          </Button>
+          {optimalReduction !== null && (
+            <Message color="info">
+              Optimal Reduction: {optimalReduction}
+            </Message>
+          )}
         </Column>
         <Column>
           <Graph

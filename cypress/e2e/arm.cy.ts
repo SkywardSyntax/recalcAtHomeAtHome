@@ -60,6 +60,14 @@ describe("Arm Calculator e2e tests", () => {
     );
   });
 
+  it("optimize button works", () => {
+    cy.contains("Optimize", { timeout: 1000 * 60 })
+      .should("be.visible")
+      .click();
+    cy.contains("Optimal Reduction: ", { timeout: 1000 * 60 })
+      .should("be.visible");
+  });
+
   generateIOTests<
     typeof inputs,
     typeof outputs,

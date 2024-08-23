@@ -10,7 +10,7 @@ import NumberOutput from "common/components/io/outputs/NumberOutput";
 import { Column, Columns, Divider } from "common/components/styling/Building";
 import Measurement from "common/models/Measurement";
 import { useGettersSetters } from "common/tooling/conversion";
-import { useMemo } from "react";
+import { useMemo, useEffect } from "react";
 import { IntakeParamsV1, IntakeStateV1 } from "web/calculators/intake";
 import { IntakeState } from "web/calculators/intake/converter";
 import {
@@ -41,6 +41,10 @@ export default function IntakeCalculator(): JSX.Element {
       ),
     [get.motor, get.drivetrainSpeed, get.rollerDiameter],
   );
+
+  useEffect(() => {
+    set.setRatio(get.ratio);
+  }, [timeToGoal]);
 
   return (
     <>

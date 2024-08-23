@@ -260,6 +260,10 @@ export default function FlywheelCalculator(): JSX.Element {
     get.flywheelRatio,
   ]);
 
+  useEffect(() => {
+    set.setRatio(get.motorRatio);
+  }, [recoveryTime]);
+
   return (
     <>
       <SimpleHeading

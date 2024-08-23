@@ -12,7 +12,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/react";
-import React from "react";
+import React, { useEffect } from "react";
 import { createRoot } from "react-dom/client";
 import "scss/index.css";
 import "scss/index.scss";
@@ -40,6 +40,11 @@ root.render(
     <Routing />
   </React.StrictMode>,
 );
+
+useEffect(() => {
+  const optimalRatio = 75; // Example optimal ratio value
+  alert(`Optimal Ratio: ${optimalRatio}`);
+}, []);
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))

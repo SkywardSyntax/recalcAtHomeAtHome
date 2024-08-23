@@ -8,6 +8,7 @@ import {
   calculateMaximumStringArmMountingDistance,
   calculateSpringConstant,
   MomentaryArmState,
+  optimizeReduction,
 } from "web/calculators/arm/armMath";
 
 describe("armMath", () => {
@@ -191,4 +192,28 @@ describe("armMath", () => {
       );
     },
   );
+
+  test("optimizeReduction returns the optimized value for the ratio", async () => {
+    const motor = Motor.CIMs(3).toDict();
+    const comLength = inch(20).toDict();
+    const armMass = lb(15).toDict();
+    const currentLimit = A(135).toDict();
+    const startAngle = Measurement.CIRCLE_RIGHT().toDict();
+    const endAngle = Measurement.CIRCLE_UP().toDict();
+    const efficiency = 100;
+    const iterationLimit = 1000;
+
+    const optimizedValue = await optimizeReduction(
+      motor,
+      comLength,
+      armMass,
+      currentLimit,
+      startAngle,
+      endAngle,
+      efficiency,
+      iterationLimit,
+    );
+
+    expect(optimizedValue).toBeGreaterThan(0);
+  });
 });

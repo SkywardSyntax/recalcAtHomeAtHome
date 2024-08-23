@@ -1,9 +1,17 @@
 import L2NumberSelect from "common/components/io/new/inputs/L2/L2NumberSelect";
 import { RatioInputProps } from "common/components/io/new/inputs/types/Types";
 import Ratio, { RatioType } from "common/models/Ratio";
+import { useEffect, useState } from "react";
 
 export default function RatioInput(props: RatioInputProps): JSX.Element {
   const [ratio, _] = props.stateHook;
+  const [displayedValue, setDisplayedValue] = useState(ratio.magnitude);
+
+  useEffect(() => {
+    if (props.optimizedValue !== undefined && props.optimizedValue !== null) {
+      setDisplayedValue(props.optimizedValue);
+    }
+  }, [props.optimizedValue]);
 
   return (
     <L2NumberSelect

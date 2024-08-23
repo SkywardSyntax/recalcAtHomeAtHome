@@ -20,7 +20,17 @@ interface BaseParams {
 }
 
 type Stateify<ParamMap extends BaseParams> = {
-  [Name in keyof ParamMap]: ReturnType<ParamMap[Name]["decode"]>;
+  [Name in keyof ParamMap]: ReturnType<ParamMap[Name]["decode"]> & {
+    ratio: Ratio;
+    motor: Motor;
+    comLength: Measurement;
+    armMass: Measurement;
+    currentLimit: Measurement;
+    startAngle: Measurement;
+    endAngle: Measurement;
+    efficiency: number;
+    iterationLimit: number;
+  };
 };
 
 export type ParamifyDefaults<DefaultMap extends BaseState> = {
@@ -28,11 +38,11 @@ export type ParamifyDefaults<DefaultMap extends BaseState> = {
     ? typeof MeasurementParam
     : DefaultMap[Name] extends Motor
       ? typeof MotorParam
-      : DefaultMap[Name] extends Ratio
-        ? typeof RatioParam
-        : DefaultMap[Name] extends boolean
-          ? typeof BooleanParam
-          : null;
+    : DefaultMap[Name] extends Ratio
+      ? typeof RatioParam
+    : DefaultMap[Name] extends boolean
+      ? typeof BooleanParam
+    : null;
 };
 
 export type UseStateObject<T extends BaseState> = {
@@ -43,7 +53,9 @@ export type SetterStr<Str extends string> = `set${PascalCase<Str>}`;
 type Setters<K extends BaseState> = {
   [Prop in keyof K as SetterStr<Prop extends string ? Prop : never>]: Dispatch<
     SetStateAction<K[Prop]>
-  >;
+  > & {
+    setRatio: Dispatch<SetStateAction<Ratio>>;
+  };
 };
 
 export type { Setters, Stateify };
@@ -110,7 +122,7 @@ export const J = (n: number): Measurement => new Measurement(n, "J");
 export const deg = (n: number): Measurement => new Measurement(n, "degrees");
 export const V = (n: number): Measurement => new Measurement(n, "V");
 export const Nm = (n: number): Measurement => new Measurement(n, "N m");
-export const W = (n: number): Measurement => new Measurement(n, "W");
+export const W = (n: number): new Measurement(n, "W");
 export const in_s2 = (n: number): Measurement => new Measurement(n, "in/s2");
 export const m_s2 = (n: number): Measurement => new Measurement(n, "m/s2");
 export const ft_s2 = (n: number): Measurement => new Measurement(n, "ft/s2");

@@ -7,11 +7,16 @@ import {
   CompressorParam,
   MeasurementParam,
   PistonListParam,
+  MotorParam,
+  RatioParam,
+  BooleanParam,
 } from "common/models/Params";
 import Piston from "common/models/Piston";
 import PistonList from "common/models/PistonList";
 import { lazy } from "react";
 import { withDefault } from "serialize-query-params";
+import Ratio, { RatioType } from "common/models/Ratio";
+import Motor from "common/models/Motor";
 
 const pneumaticsConfig: PageConfig = {
   url: "/pneumatics",
@@ -55,6 +60,16 @@ export const PneumaticsParamsV1 = {
   ),
   tankVolume: withDefault(MeasurementParam, new Measurement(574 * 2, "cm^3")),
   compressor: withDefault(CompressorParam, Compressor.VIAIR_90C_12V()),
+  motor: withDefault(MotorParam, Motor.NEOs(2)),
+  ratio: withDefault(RatioParam, new Ratio(100, RatioType.REDUCTION)),
+  comLength: withDefault(MeasurementParam, new Measurement(20, "in")),
+  armMass: withDefault(MeasurementParam, new Measurement(15, "lb")),
+  currentLimit: withDefault(MeasurementParam, new Measurement(40, "A")),
+  startAngle: withDefault(MeasurementParam, Measurement.CIRCLE_RIGHT()),
+  endAngle: withDefault(MeasurementParam, Measurement.CIRCLE_UP()),
+  iterationLimit: withDefault(NumberParam, 10000),
+  efficiency: withDefault(NumberParam, 100),
+  optimizeButton: withDefault(BooleanParam, false),
 };
 
 export type PneumaticsStateV1 = Stateify<typeof PneumaticsParamsV1>;

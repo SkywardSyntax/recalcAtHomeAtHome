@@ -14,7 +14,7 @@ import { useAsyncMemo } from "common/hooks/useAsyncMemo";
 import Measurement from "common/models/Measurement";
 import { useGettersSetters } from "common/tooling/conversion";
 import { wrap } from "common/tooling/promise-worker";
-import { useMemo } from "react";
+import { useMemo, useEffect } from "react";
 import {
   DriveParamsV1,
   DriveStateV1,
@@ -166,6 +166,10 @@ export default function DriveCalculator(): JSX.Element {
       get.weightAuxilliary,
     ],
   );
+
+  useEffect(() => {
+    set.setRatio(get.ratio);
+  }, [output?.timeToGoal]);
 
   return (
     <>

@@ -6,6 +6,7 @@ import Compressor, {
 import Measurement from "common/models/Measurement";
 import PistonList, { PistonListDict } from "common/models/PistonList";
 import { expose } from "common/tooling/promise-worker";
+import { calculateArmStates } from "web/calculators/arm/armMath";
 
 type Timeline = { x: number; y: number }[];
 type TimelineAndDutyCycle = {
@@ -113,6 +114,7 @@ export function getRecommendedTanks(
 const workerFunctions = {
   generatePressureTimeline,
   getRecommendedTanks,
+  calculateArmStates,
 };
 
 expose(workerFunctions);
